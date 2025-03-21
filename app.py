@@ -7,15 +7,13 @@ Original file is located at
     https://colab.research.google.com/drive/1ZzDvCVGoa396eehJ9vLYHtGihqT2L7x2
 """
 
-
-
 # Import libraries
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-import sounddevice as sd
 import soundfile as sf
 import os
 import streamlit as st
+from TTS.api import TTS
 
 # Load the language model and tokenizer
 def load_models():
@@ -23,14 +21,6 @@ def load_models():
     tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
     model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-neo-125M")
     return tokenizer, model
-
-# Function to record audio
-def record_audio(filename, duration=5, samplerate=16000):
-    print("Recording audio...")
-    audio = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype='float32')
-    sd.wait()
-    sf.write(filename, audio, samplerate)
-    print("Recording complete.")
 
 # Function to convert speech to text using Whisper
 def audio_to_text(filename):
@@ -56,7 +46,6 @@ def generate_response(tokenizer, model, text, conversation_history):
 
 # Function to convert text to speech using Coqui TTS
 def text_to_speech(text, output_file="output.wav"):
-    from TTS.api import TTS
     tts = TTS(model_name="tts_models/fa/cv/vits", progress_bar=False, gpu=False)
     tts.tts_to_file(text=text, file_path=output_file)
 
@@ -71,14 +60,16 @@ def main():
     if "conversation_history" not in st.session_state:
         st.session_state.conversation_history = ""
 
-    # Record audio
-    audio_file = "input.wav"
-    if st.button("Start Recording"):
-        record_audio(audio_file)
+    # Upload audio file
+    audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3"])
 
-    # Convert speech to text
-    if os.path.exists(audio_file):
-        user_input = audio_to_text(audio_file)
+    if audio_file is not None:
+        # Save the uploaded file
+        with open("input.wav", "wb") as f:
+            f.write(audio_file.getbuffer())
+
+        # Convert speech to text
+        user_input = audio_to_text("input.wav")
         st.write(f"User Input: {user_input}")
 
         # Generate response
@@ -101,5 +92,3 @@ def main():
 # Run the app
 if __name__ == "__main__":
     main()
-
-
