@@ -7,12 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1ZzDvCVGoa396eehJ9vLYHtGihqT2L7x2
 """
 
-# Install required libraries
-!pip install torch transformers sounddevice soundfile streamlit
-
-# Install system dependencies for sounddevice and soundfile
-!apt-get install -y libportaudio2
-!pip install sounddevice soundfile
 
 
 # Import libraries
