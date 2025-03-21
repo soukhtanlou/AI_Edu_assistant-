@@ -1,6 +1,7 @@
 torch
 transformers
-sounddevice
 soundfile
 streamlit
+TTS
+whisper
 
