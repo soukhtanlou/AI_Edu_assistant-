@@ -7,6 +7,11 @@ Original file is located at
     https://colab.research.google.com/drive/1ZzDvCVGoa396eehJ9vLYHtGihqT2L7x2
 """
 
+# Fix asyncio event loop
+import asyncio
+import nest_asyncio
+nest_asyncio.apply()
+
 # Import libraries
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
