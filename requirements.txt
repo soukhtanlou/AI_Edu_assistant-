@@ -1,11 +1,6 @@
+torch
+transformers
+sounddevice
+soundfile
 streamlit
-pandas
-geopandas
-folium
-streamlit-folium
-pyproj
-fiona
-shapely
-plotly
-openpyxl
 
